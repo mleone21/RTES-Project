@@ -3,8 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-// crea una coda vuota
+// Creazione di una coda vuota
 Queue* qcreate()
 {
     // crea la coda
@@ -18,7 +17,7 @@ Queue* qcreate()
     return queue;
 }
 
-// Inserisce un elemento nella coda
+// Inserimento di un elemento nella coda
 void qpush(Queue* queue, int value, int nthread)
 {
     sem_wait(&queue->mutex);
@@ -29,7 +28,7 @@ void qpush(Queue* queue, int value, int nthread)
     temp->value = value;
     temp->next  = NULL;
 
-    // verifico se la coda è vuota
+    // verifica se la coda è vuota
     if (queue->front == NULL) {
         //in questo caso front e prev coincidono
         queue->front = temp;
@@ -48,13 +47,13 @@ void qpush(Queue* queue, int value, int nthread)
     printf("Sono il thread numero %d e ho lasciato il mutex\n", nthread);
 }
 
-// Estrae un elemento dalla coda
+// Estrazione di un elemento dalla coda
 void qpop(Queue* queue, int *value, int nthread)
 {
     sem_wait(&queue->mutex);
     printf("Sono il thread numero %d e ho il mutex\n", nthread);
 
-    // verifico se la coda è vuota
+    // verifica se la coda è vuota
     node *front = queue->front;
     if (front != NULL) {
         // lettura del valore ed cancellazione dell'elemento dalla coda
