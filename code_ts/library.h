@@ -23,4 +23,6 @@ void qpop(Queue* queue, int *value, int nthread);
 
 void qdestroy(Queue* queue);
 
+void nanopause();
+
 #endif //CODA_THREADSAFE_LIBRARY_H
