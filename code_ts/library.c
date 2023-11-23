@@ -1,5 +1,5 @@
 #include "library.h"
-
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,7 +14,7 @@ Queue* qcreate()
     queue->front = NULL;
     queue->prev  = NULL;
     sem_init(&queue->mutex, 0, 1);
-    sem_init(&queue->mutex, 0, 0);
+    sem_init(&queue->popsem, 0, 0);
     return queue;
 }
 
@@ -44,7 +44,6 @@ void qpush(Queue* queue, int value, int nthread)
         queue->prev = temp;
         printf("Sono il thread numero %d e inserisco nella coda il valore: %d\n", nthread, value);
     }
-
     sem_post(&queue->mutex);
     printf("Sono il thread numero %d e ho lasciato il mutex\n", nthread);
 }
@@ -57,13 +56,13 @@ void qpop(Queue* queue, int *value, int nthread)
 
     // verifico se la coda è vuota
     node *front = queue->front;
-
     if (front != NULL) {
         // lettura del valore ed cancellazione dell'elemento dalla coda
         *value = front->value;
         queue->front = front->next;
         free(front);
         printf("Sono il thread numero %d ed estraggo dalla coda il valore: %d\n", nthread, *value);
+        sem_post(&queue->popsem);
     } else {
         printf("Sono il thread numero %d, la coda è vuota, mi blocco:\n", nthread);
     }
@@ -76,4 +75,13 @@ void qdestroy (Queue* queue){
     sem_destroy(&queue->mutex);
     sem_destroy(&queue->popsem);
     free(queue);
+}
+
+void nanopause()
+{
+    struct timespec t;
+    t.tv_sec = 0;
+    t.tv_nsec = (rand()%10+1)*1000000;
+    // Nano second.
+    nanosleep(&t,NULL);
 }
