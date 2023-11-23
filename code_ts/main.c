@@ -35,7 +35,6 @@ void *thread(void *arg){
         qpush(queue, sval, nthread);
         qpop(queue, &popval, nthread);
         qpop(queue, &popval, nthread);
-        qpop(queue, &popval, nthread);
     }
     pthread_exit(0);
 }
