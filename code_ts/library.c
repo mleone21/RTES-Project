@@ -73,6 +73,12 @@ void qpop(Queue* queue, int *value, int nthread)
 void qdestroy (Queue* queue){
     sem_destroy(&queue->mutex);
     sem_destroy(&queue->popsem);
+    node *t;
+    while(queue->front != NULL){
+        t = queue->front;
+        queue->front = t->next;
+        free(t);
+    }
     free(queue);
 }
 
